@@ -74,3 +74,32 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+// Funciton to create usernames of accounts
+const createUsername = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(ele => ele[0])
+      .join('');
+  });
+};
+createUsername(accounts);
+
+// Adding funciotnality to login button
+let currentAccount;
+
+btnLogin.addEventListener('click', function (e) {
+  e.preventDefault();
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //Display UI & message
+    // Display Movements
+    // Display Balance
+    // Display Summary
+  }
+});
