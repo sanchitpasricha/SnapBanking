@@ -73,8 +73,6 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
-
 // Funciton to create usernames of accounts
 const createUsername = function (accs) {
   accs.forEach(function (acc) {
@@ -98,8 +96,16 @@ btnLogin.addEventListener('click', function (e) {
 
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     //Display UI & message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
     // Display Movements
+    displayMovements(currentAccount.movements);
+
     // Display Balance
+
     // Display Summary
   }
 });
