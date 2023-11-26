@@ -73,6 +73,34 @@ const displayMovements = function (movements) {
   });
 };
 
+// Function to display total balance
+const displayCurrentBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov);
+  labelBalance.textContent = `${balance}€`;
+};
+
+// Function to display summary of data
+const displaySummary = function (acc) {
+  const income = acc.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${income}€`;
+
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = acc.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+
 // Funciton to create usernames of accounts
 const createUsername = function (accs) {
   accs.forEach(function (acc) {
@@ -101,11 +129,17 @@ btnLogin.addEventListener('click', function (e) {
     }`;
     containerApp.style.opacity = 100;
 
+    // Clear form fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
     // Display Movements
     displayMovements(currentAccount.movements);
 
     // Display Balance
+    displayCurrentBalance(currentAccount.movements);
 
     // Display Summary
+    displaySummary(currentAccount);
   }
 });
