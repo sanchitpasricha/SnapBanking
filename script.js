@@ -80,8 +80,15 @@ const displayMovements = function (acc, sort = false) {
   moveSort.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
+    const date = new Date(acc.movementsDates[i]);
+    const day = `${date.getDay()}`.padStart(2, 0);
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const year = date.getFullYear();
+    const displayDate = `${day}/${month}/${year}`;
+
     const html = `<div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
+    <div class="movements__date">${displayDate}</div>
     <div class="movements__value">${mov}€</div>
   </div>`;
 
@@ -145,18 +152,9 @@ const updateUI = function (acc) {
 let currentAccount;
 
 // Faking login
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
-
-// Setting up date
-const now = new Date();
-const day = `${now.getDay()}`.padStart(2, 0); // it pads the starting with 0 if string < 2 size.
-const month = `${now.getMonth() + 1}`.padStart(2, 0);
-const year = now.getFullYear();
-const hour = now.getHours();
-const minutes = now.getMinutes();
-labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 // Loging button
 btnLogin.addEventListener('click', function (e) {
@@ -171,6 +169,15 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 100;
+
+    // Setting up date
+    const now = new Date();
+    const day = `${now.getDay()}`.padStart(2, 0); // it pads the starting with 0 if string < 2 size.
+    const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    const year = now.getFullYear();
+    const hour = `${now.getHours()}`.padStart(2, 0);
+    const minutes = `${now.getMinutes()}`.padStart(2, 0);
+    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${minutes}`;
 
     // Clear form fields
     inputLoginUsername.value = inputLoginPin.value = '';
@@ -200,6 +207,10 @@ btnTransfer.addEventListener('click', function (e) {
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
 
+    // Inserting transfer date
+    currentAccount.movementsDates.push(new Date());
+    receiverAcc.movementsDates.push(new Date());
+
     updateUI(currentAccount);
   }
 });
@@ -209,6 +220,8 @@ btnLoan.addEventListener('click', function (e) {
 
   const amount = Number(inputLoanAmount.value);
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    currentAccount.movementsDates.push(new Date());
+
     currentAccount.movements.push(amount);
     updateUI(currentAccount);
   }
