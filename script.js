@@ -187,10 +187,12 @@ const startLogOutTimer = function () {
   tick();
   // Call the timer every second
   const timer = setInterval(tick, 1000);
+
+  return timer;
 };
 
 // Adding funciotnality to login button
-let currentAccount;
+let currentAccount, timer;
 
 // Loging button
 btnLogin.addEventListener('click', function (e) {
@@ -219,7 +221,8 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
-    startLogOutTimer();
+    if (timer) clearInterval(timer);
+    timer = startLogOutTimer();
 
     updateUI(currentAccount);
   }
